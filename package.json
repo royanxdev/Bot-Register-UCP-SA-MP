@@ -1,0 +1,42 @@
+{
+  "name": "bot-sa-mp",
+  "version": "1.0.0",
+  "description": "Bot integrasi SA-MP, Discord, WhatsApp, dan database",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "samp",
+    "discord",
+    "bot",
+    "whatsapp",
+    "mysql",
+    "mongodb"
+  ],
+  "author": "Nothingz",
+  "license": "ISC",
+  "dependencies": {
+    "add": "^2.0.6",
+    "axios": "^1.10.0",
+    "bcrypt": "^6.0.0",
+    "chalk": "^5.4.1",
+    "cron": "^4.3.1",
+    "discord.js": "^14.20.0",
+    "dotenv": "^16.5.0",
+    "find-remove": "^5.1.1",
+    "module-alias": "^2.2.3",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.0",
+    "ms": "^2.1.3",
+    "mysql2": "^3.14.1",
+    "mysqldump": "^3.2.0",
+    "or": "^0.2.0",
+    "qrcode-terminal": "^0.12.0",
+    "samp-query": "^0.1.5",
+    "twilio": "^5.7.1",
+    "update": "^0.7.4",
+    "whatsapp-web.js": "^1.30.0"
+  }
+}

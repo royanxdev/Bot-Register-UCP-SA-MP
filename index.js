@@ -109,7 +109,7 @@ client.on('messageCreate', async (message) => {
     if (
         !message.member?.roles.cache.has('1384944603114770453') && // bukan admin
         /https?:\/\/[^\s]+/.test(message.content) && // mendeteksi link
-        !['1384945068816728115', '1384945073816604743'].includes(message.channel.id) // channel yang DIBOLEHKAN kirim link
+        !['1384945068816728115', '1384945073816604743', '1384945059849572393', '1384945061455859723'].includes(message.channel.id) // channel yang DIBOLEHKAN kirim link
     ) {
         await message.delete().catch(() => {});
         return message.channel.send(`${message.author}, hanya admin yang boleh mengirim link di channel ini.`)

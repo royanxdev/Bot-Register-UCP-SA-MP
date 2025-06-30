@@ -30,55 +30,22 @@ function normalizeMessage(content) {
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// Pola regex untuk filter kata kasar yang fleksibel
-const toxicPatterns = [
-    /k[o0]+n[t7]+[o0]+l+/, /kntl/, /kontol/,
-    /a[n@]+j[i1!]+[n@]+g+/, /anj+/, /ajg+/, /anjr+/, /anjay/, /nj[i1]+ng+/, /njing+/, /njg+/, /njr+/, /anjink+/, /enjing+/,
-    /a[s5]+[uue]+/, /asu+/, /asw+/, /asuh+/, /asoe+/,
-    /b[a@]+j[i1]+n[gq]+[a@]+n+/,
-    /ng[e3]+nt[o0]+d+/, /ngtd+/, /ngent[o0]+d+/, /tod+/, /td+/,
-    /g[o0]+b[l1i]+[o0]+k+/, /gblk+/, /gblg/, /goblo[kc]+/, /gblok/, /gblk/,
-    /b[o0]+k[e3]+p+/,
-    /m[e3]+m[e3]+k+/, /mmk+/, /memek/, /memk/, /mek+/, /mekk+/,
-    /b[e3]+g[o0]+/,
-    /t[o0]+l[o0]+l+/, /tol[o0]+l+/, /tolol/,
-    /a[jg]+/, /ajg+/,
-    /p[u]+[kq]+[i1]+/, /puki+/,
-    /t[e3]+l[a4]+s[o0]+/,
-    /p[e3]+nt[i1]+l+/, /pentil+/,
-    /k[a4]+w[e3]+n+/,
-    /b[o0]+d[o0]+h+/, /bod[o0]+h+/, /bdh/,
-    /c[o0]+l[i1]+/, /col[i1]+/,
-    /c[o0]+l[m]+[e3a@x]+k*/, /colmek+/,
-    /l[o0]+nt[e3]+/,
-    /y[a4]+t[i1]+m+/, /ytim+/, /ytteam+/,
-    /p[i1]+[a@]+t[uue]+/, /piatu/,
-    /sugiono/, /mia[\s_]*khalifa/,
-    /j[o0]+rd[i1]+/,
-    /m[e3]+k[i1]+/, /meki+/, /memk+/,
-    /h[y]+t[a4]+m+/,
-    /n[i1]+gg[a@]+/, /nigga+/,
-    /b[a4]+ngs[a4]+t+/, /bangsat+/, /bngst+/,
-    /p[e3]+p[e3]+k+/, /pepek+/,
-    /ng[e3]+w[e3]+/, /ngewe+/,
-    /s[e3]+x+/, /seks/, /sex+/,
-    /s[a4]+ng[e3]+/, /sange+/,
-    /p[a@]+nt[e3]+k+/, /pantek+/, /pntk+/,
-    /p[e3]+l[a@]+c[uue]+r+/, /pelacur+/, /pelcur+/,
-    /b[e3]+nc[o0]+ng+/, /bencong+/,
-    /h[o0]+m[o0]+/, /homo+/,
-    /l[e3]+sb[i1]+/, /lesbi+/, /lesbian+/,
-    /s[a4]+r[a4]+p+/, /sarap+/,
-    /s[e3]+t[a4]+n+/, /setan+/,
-    /i[b8]+l[i1]+s+/, /iblis+/,
-    /a[n@]+jr[i1]+t+/, /anjrit+/, /anjrot+/,
-    /f[u]+[c]+k+/, /fuck+/, /fck+/,
-    /s[h]+[i1]+t+/, /shit+/,
-    /b[i1]+[t7]+ch+/, /bitch+/,
-    /d[i1]+ck+/, /dik+/, /dick+/,
-    /c[o0]+ck+/, /cock+/,
-    /c[u]+nt+/, /cunt+/,
-    /j[a4]+w[a4]+/, /pal[e3]+mb[a4]+ng+/
+const toxicPatterns = 
+[
+  /k([o0]+)?n[t7]+[o0]*l+/i,
+  /an[jg]+(ay|r|ink|ing)?/i,
+  /a[s5]+[uue]+|asu+|asw+|asuh+|asoe+/i,
+  /b[a@]+j[i1]+n[gq]+[a@]+n+/i,
+  /ng[e3]+nt[o0]+d+|ngtd+|tod+|td+/i,
+  /g[o0]+b[l1i]+[o0]+k+|gblk+|gblg|goblo[kc]+/i,
+  /m[e3]+m[e3]+k+|mmk+|memek|mek+/i,
+  /s[a4]+ng[e3]+|sange+/i,
+  /s[e3]+x+|seks|sex+/i,
+  /f[u]+c+k+|fuck+|fck+/i,
+  /s[h]+i+t+|shit+/i,
+  /b[i1]+[t7]+ch+|bitch+/i,
+  /n[i1]+gg[a@]+|nigga+/i,
+  /s[a4]+r[a4]+p+|sarap+/i,
 ];
 
 // Event Ready
@@ -140,11 +107,12 @@ client.on('messageCreate', async (message) => {
 
     // 🔗 Anti link (user non-admin)
     if (
-        !message.member?.roles.cache.has('1384944603114770453') &&
-        /https?:\/\/[^\s]+/.test(message.content)
+        !message.member?.roles.cache.has('1384944603114770453') && // bukan admin
+        /https?:\/\/[^\s]+/.test(message.content) && // mendeteksi link
+        !['1384945068816728115', '1384945073816604743'].includes(message.channel.id) // channel yang DIBOLEHKAN kirim link
     ) {
         await message.delete().catch(() => {});
-        return message.channel.send(`${message.author}, hanya admin yang boleh mengirim link.`)
+        return message.channel.send(`${message.author}, hanya admin yang boleh mengirim link di channel ini.`)
             .then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000));
     }
 

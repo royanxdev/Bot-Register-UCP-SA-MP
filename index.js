@@ -92,7 +92,7 @@ client.on('messageCreate', async (message) => {
             message.member.moderatable
         ) {
             try {
-                await message.member.timeout(2 * 60 * 1000, 'Mengirim pesan toxic');
+                await message.member.timeout(60 * 1000, 'Mengirim pesan toxic');
                 console.log(`✅ ${message.author.tag} dikenai timeout sampai: ${message.member.communicationDisabledUntil}`);
             } catch (error) {
                 console.warn(`Gagal timeout ${message.author.tag} karena: ${error.code} - ${error.message}`);

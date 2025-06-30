@@ -23,12 +23,12 @@ const invitesCache = new Collection();
 const lastMessageCache = new Map(); // Untuk sticky message
 
 // Fungsi untuk normalisasi teks agar bisa dideteksi meski disamarkan
-function normalizeMessage(content) {
+/*function normalizeMessage(content) {
     return content
         .toLowerCase()
         .replace(/[\W_]/g, '') // hapus simbol, spasi, dll
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
+}*/
 
 const toxicPatterns = 
 [

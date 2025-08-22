@@ -4,8 +4,8 @@ let messageEmbed; // Variabel untuk menyimpan pesan embed
 let serverOnlineTime = null;
 
 function updateEmbed(client, channelId) {
-    let server_ip = '103.42.116.245';
-    let server_port = '7001';
+    let server_ip = '104.234.180.165';
+    let server_port = '7003';
     const samp = { host: server_ip, port: server_port };
 
     query(samp, (error, response) => {
@@ -29,7 +29,7 @@ function updateEmbed(client, channelId) {
         const embed = new EmbedBuilder()
             .setTitle('Nosterna Roleplay')
             .setColor("FFFF00")
-            .setImage('https://media.discordapp.net/attachments/1372979966026977280/1373172739439071302/Sab_17_05_2025_10_25_56.png?ex=682a1b05&is=6828c985&hm=dbfab1035bfb5b962292e2a8d424d0737f92b96a41dccb4ca7b42d05f4eafb12&=&format=webp&quality=lossless&width=656&height=656')
+            .setImage('https://media.discordapp.net/attachments/1390919203434921995/1390920518089052264/file_00000000eccc61fd9508dc8e9fc84aba.png?ex=686a032d&is=6868b1ad&hm=f391be072fed51ac431ba5a2d271117b3211d44c18bf27bbe5b8a0dd3a779e65&=&format=webp&quality=lossless&width=552&height=552')
             .addFields(
                 { name: '> STATUS', value: error ? '```🔴 Offline```' : '```🟢 Online```', inline: true },
                 { name: '> PLAYERS', value: error ? '```N/A```' : `\`\`\`\n${response['online']}/${response['maxplayers']}\n\`\`\``, inline: true },

@@ -6,8 +6,8 @@ const config = require('./config');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const CHANNEL_ID = "1385767787124887603";
-const SENT_LOGS_FILE = path.join(__dirname, 'sentLogs.json');
+const CHANNEL_ID = "1398281037322387598";
+const SENT_LOGS_FILE = path.join(__dirname, 'adminlogs.json');
 
 let sentSignatures = new Set();
 
@@ -17,7 +17,7 @@ if (fs.existsSync(SENT_LOGS_FILE)) {
         const data = fs.readFileSync(SENT_LOGS_FILE, 'utf-8');
         sentSignatures = new Set(JSON.parse(data));
     } catch (err) {
-        console.error('❌ Gagal membaca sentLogs.json:', err);
+        console.error('❌ Gagal membaca adminlogs.json:', err);
     }
 }
 

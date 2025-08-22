@@ -33,7 +33,7 @@ module.exports = {
             .setTitle(title)
             .setDescription(descriptioni)
             .setColor('FFFF00')
-            .setFooter({ text: "Copyright (c) 2024 Exercise Roleplay (All rights reserved)." })
+            .setFooter({ text: "Copyright (c) 2025 Nosterna Roleplay (All rights reserved)." })
             .setTimestamp();
 
         chennelembed.send({ embeds: [msgEmbed] });

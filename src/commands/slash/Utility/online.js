@@ -12,6 +12,7 @@ module.exports = {
      */
     run: async (client, interaction) => {
         const allowedUserId = '769759712039796736'; // Hanya user ini yang diizinkan
+        const channelId = '1384944936939425944';    // Channel tujuan kirim notifikasi
 
         if (interaction.user.id !== allowedUserId) {
             return interaction.reply({
@@ -21,19 +22,18 @@ module.exports = {
         }
 
         const serverName = "🌐 Nosterna Roleplay";
-        const channelId = '1384944936939425944';
+        const getTimeNow = () =>
+            new Date().toLocaleString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Asia/Jakarta',
+                hour12: false,
+            }) + ' WIB';
 
-        const currentDate = new Date().toLocaleString('id-ID', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZone: 'Asia/Jakarta',
-            hour12: false,
-        }) + ' WIB';
-
-        const gifUrl = 'https://media.discordapp.net/attachments/1373428066835103774/1385518604509904996/standard_3.gif?ex=68565c41&is=68550ac1&hm=ee8b49ec801ea280e324338e707baa0a3ac47b0d5629ca0977dd1ca265d9a8b7&';
+        const gifUrl = 'https://media.discordapp.net/attachments/1373428066835103774/1385518604509904996/standard_3.gif';
 
         const onlineEmbed = new EmbedBuilder()
             .setColor(0x26A65B)
@@ -43,16 +43,17 @@ module.exports = {
                 `Terima kasih atas kesabaran dan dukungan Anda selama proses pemeliharaan berlangsung.\n\n` +
                 `__**Status**__\n🟢 **Server Online & Stabil**\n\n` +
                 `__**Informasi Tambahan**__\n🔧 Semua sistem telah dipulihkan dan berjalan sebagaimana mestinya.\n\n` +
-                `🕒 ${currentDate} | 🙏 Kami sangat menghargai kesetiaan Anda.`
+                `🕒 ${getTimeNow()} | 🙏 Kami sangat menghargai kesetiaan Anda.`
             )
             .setImage(gifUrl);
 
         try {
+            await interaction.deferReply({ ephemeral: true });
+
             const targetChannel = client.channels.cache.get(channelId);
             if (!targetChannel) {
-                return interaction.reply({
-                    content: '❌ Channel tidak ditemukan. Pastikan ID channel benar!',
-                    ephemeral: false
+                return await interaction.editReply({
+                    content: '❌ Channel tidak ditemukan. Pastikan ID channel benar!'
                 });
             }
 
@@ -61,17 +62,25 @@ module.exports = {
                 embeds: [onlineEmbed]
             });
 
-            await interaction.reply({
-                content: `📢 Log: Status Online berhasil diumumkan di <#${channelId}>.`,
-                ephemeral: false
+            await interaction.editReply({
+                content: `📢 Log: Status Online berhasil diumumkan di <#${channelId}>.`
             });
 
         } catch (error) {
-            console.error(error);
-            await interaction.reply({
-                content: '❌ Terjadi kesalahan saat mengirim status online.',
-                ephemeral: false
-            });
+            console.error('❌ Error saat kirim embed online:', error);
+
+            // Hindari error Unknown Interaction
+            if (interaction.deferred || interaction.replied) {
+                await interaction.followUp({
+                    content: '❌ Gagal mengumumkan status online.',
+                    ephemeral: true
+                });
+            } else {
+                await interaction.reply({
+                    content: '❌ Gagal mengumumkan status online.',
+                    ephemeral: true
+                });
+            }
         }
     }
 };

@@ -11,8 +11,14 @@ module.exports = {
      * @param {import('discord.js').CommandInteraction} interaction 
      */
     run: async (client, interaction) => {
-        const allowedUserId = '769759712039796736'; // Ganti sesuai user yang diizinkan
+        // Configuration
+        const allowedUserId = '769759712039796736';
+        const channelId = '1384944936939425944';
+        const restartGif = 'https://media.discordapp.net/attachments/1373428066835103774/1385527296768610344/standard_4.gif';
+        const onlineGif = 'https://media.discordapp.net/attachments/1373428066835103774/1385518604509904996/standard_3.gif';
+        const restartDuration = 120000; // 2 minutes in ms
 
+        // Permission check
         if (interaction.user.id !== allowedUserId) {
             return interaction.reply({
                 content: '❌ Kamu tidak memiliki izin untuk menggunakan perintah ini.',
@@ -20,10 +26,9 @@ module.exports = {
             });
         }
 
-        const channelId = '1384944936939425944'; // ID channel tujuan
-
-        const getTimeNow = () =>
-            new Date().toLocaleString('id-ID', {
+        // Helper function for formatted time
+        const getTimeNow = () => {
+            return new Date().toLocaleString('id-ID', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -32,10 +37,9 @@ module.exports = {
                 timeZone: 'Asia/Jakarta',
                 hour12: false,
             }) + ' WIB';
+        };
 
-        const gifRestart = 'https://media.discordapp.net/attachments/1373428066835103774/1385527296768610344/standard_4.gif';
-        const gifOnline = 'https://media.discordapp.net/attachments/1373428066835103774/1385518604509904996/standard_3.gif';
-
+        // Create embeds
         const restartEmbed = new EmbedBuilder()
             .setColor(0xFFD700)
             .setTitle('🔁 SERVER SEDANG MELAKUKAN RESTART 🔁')
@@ -46,7 +50,7 @@ module.exports = {
                 `__**Estimasi Selesai**__\n⏳ **± 1 Menit**\n\n` +
                 `🛠️ *Sistem sedang dimuat ulang dan dipersiapkan kembali.*\n📅 ${getTimeNow()}`
             )
-            .setImage(gifRestart);
+            .setImage(restartGif);
 
         const onlineEmbed = new EmbedBuilder()
             .setColor(0x26A65B)
@@ -58,30 +62,64 @@ module.exports = {
                 `__**Keterangan**__\n📌 Semua sistem telah dipulihkan dan siap digunakan.\n\n` +
                 `🕒 ${getTimeNow()} | 🤝 Kami senang melayani Anda kembali.`
             )
-            .setImage(gifOnline);
+            .setImage(onlineGif);
 
         try {
-            const targetChannel = client.channels.cache.get(channelId);
+            // Defer reply to avoid timeout
+            await interaction.deferReply({ ephemeral: true });
+
+            // Get channel and validate
+            const targetChannel = await client.channels.fetch(channelId).catch(() => null);
             if (!targetChannel) {
-                return interaction.reply({
-                    content: '❌ Channel tidak ditemukan. Cek ID channel.',
-                    ephemeral: false
+                return await interaction.editReply({
+                    content: '❌ Channel tidak ditemukan. Pastikan ID channel benar dan bot memiliki akses!'
                 });
             }
 
-            await targetChannel.send({ content: '@everyone', embeds: [restartEmbed] });
-            await interaction.reply({ content: '✅ Status restart berhasil dikirim.', ephemeral: false });
+            // Send restart notification
+            await targetChannel.send({ 
+                content: '@everyone', 
+                embeds: [restartEmbed] 
+            });
 
+            // Confirm success
+            await interaction.editReply({
+                content: '✅ Notifikasi restart berhasil dikirim. Notifikasi online akan dikirim secara otomatis dalam 2 menit.'
+            });
+
+            // Schedule online notification
             setTimeout(async () => {
-                await targetChannel.send({ content: '@everyone', embeds: [onlineEmbed] });
-            }, 120000); // 2 menit (120000 ms)
+                try {
+                    await targetChannel.send({ 
+                        content: '@everyone', 
+                        embeds: [onlineEmbed] 
+                    });
+                    console.log(`✅ Status online berhasil dikirim ke channel ${channelId}`);
+                } catch (error) {
+                    console.error('❌ Gagal mengirim notifikasi online:', error);
+                    // Try to notify command user about the failure
+                    interaction.followUp({
+                        content: '⚠️ Gagal mengirim notifikasi online. Silakan kirim manual.',
+                        ephemeral: true
+                    }).catch(console.error);
+                }
+            }, restartDuration);
 
         } catch (error) {
-            console.error(error);
-            await interaction.reply({
-                content: '❌ Terjadi kesalahan saat mengirim status restart.',
-                ephemeral: false
-            });
+            console.error('❌ Error saat menjalankan command restart:', error);
+            
+            // Error handling with proper interaction state check
+            if (interaction.deferred || interaction.replied) {
+                await interaction.followUp({
+                    content: '❌ Gagal mengirim notifikasi restart. Silakan coba lagi atau hubungi developer.',
+                    ephemeral: true
+                }).catch(console.error);
+            } else {
+                await interaction.reply({
+                    content: '❌ Gagal mengirim notifikasi restart. Silakan coba lagi atau hubungi developer.',
+                    ephemeral: true
+                }).catch(console.error);
+            }
         }
     }
 };

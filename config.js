@@ -1,22 +1,22 @@
 module.exports = {
     client: {
-        token: "", // isi dengan token Discord bot kamu
-        id: "", // isi dengan ID bot Discord kamu
-        guild: "", // isi dengan ID guild server kamu
+        token: "", //id token discord
+        id: "1373258268897575043", //id bot discord
+        guild: "1338881722573656144", //id guild server
     },
     ticket: {
-        categoryid: "", // ID Category untuk ticket
-        logticket: "", // ID Channel log ticket
+        categoryid: "1384945033706340362", // Id Category Untuk Tempat Create ticket
+        logticket: "1384945033706340362", //Id Chennel Untuk Log Ticket
     },
     mysql: {
-        host: "", // IP atau host database kamu
-        user: "", // username database
-        password: "", // password database
-        database: "" // nama database
+        host: "", //your ip database no port!!!
+        user: "", //your username database
+        password: "", //your password database
+        database: "" //your name database
     },
     github: {
-        username: "", // Username GitHub kamu (jika pakai fitur GitHub API)
-        token: "", // Token GitHub kamu
+    	username: "", // Username Github Kamu
+    	token: "", // Tokens Github Kamu
     },
     handler: {
         prefix: "!",
@@ -29,12 +29,12 @@ module.exports = {
         }
     },
     users: {
-        developers: [], // Masukkan array ID developer (contoh: ["1234567890"])
-        ownerId: "", // ID pemilik bot
+        developers: ["563698931599671298", "769759712039796736"],
+        ownerId: "1371450724822552687", // ID pemilik bot
     },
     development: {
         enabled: false,
-        guild: "", // ID guild dev
+        guild: "1338881722573656144",
     },
     messageSettings: {
         ownerMessage: "Pengembang bot memiliki satu-satunya izin untuk menggunakan perintah ini.",

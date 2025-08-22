@@ -1,8 +1,8 @@
 const query = require("samp-query");
 
 const options = {
-  host: '103.42.116.245',
-  port: 7001
+  host: '104.234.180.165',
+  port: 7003
 }
 
 const stats = () => {

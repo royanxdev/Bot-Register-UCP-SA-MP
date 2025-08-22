@@ -30,22 +30,30 @@ const lastMessageCache = new Map(); // Untuk sticky message
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }*/
 
-const toxicPatterns = 
-[
-  /k([o0]+)?n[t7]+[o0]*l+/i,
-  /an[jg]+(ay|r|ink|ing)?/i,
-  /a[s5]+[uue]+|asu+|asw+|asuh+|asoe+/i,
-  /b[a@]+j[i1]+n[gq]+[a@]+n+/i,
-  /ng[e3]+nt[o0]+d+|ngtd+|tod+|td+/i,
-  /g[o0]+b[l1i]+[o0]+k+|gblk+|gblg|goblo[kc]+/i,
-  /m[e3]+m[e3]+k+|mmk+|memek|mek+/i,
-  /s[a4]+ng[e3]+|sange+/i,
-  /s[e3]+x+|seks|sex+/i,
-  /f[u]+c+k+|fuck+|fck+/i,
-  /s[h]+i+t+|shit+/i,
-  /b[i1]+[t7]+ch+|bitch+/i,
-  /n[i1]+gg[a@]+|nigga+/i,
-  /s[a4]+r[a4]+p+|sarap+/i,
+const toxicWords = [
+  // Kata-kata kasar umum (Indonesia)
+  "anjing", "ajg", "anjir", "anjay", "bangsat", "bajingan", "bangsad", "bngst",
+  "kontol", "kntl", "konthol", "memek", "mmk", "memex", "ngentod", "ngtd", "ngentot",
+  "asu", "asw", "asuu", "goblok", "goblog", "gblk", "tolol", "idiot", "bego", "kampret",
+  "brengsek", "sarap", "saraap", "keparat", "pantat", "perek", "pelacur", "jembut", "titit",
+  "sange", "ml", "seks", "sex", "bokep", "coli", "masturbasi", "jilat", "peju", "kondom",
+
+  // Kata kasar dalam bahasa Inggris
+  "fuck", "fck", "fak", "shit", "sht", "bitch", "btch", "bastard", "asshole", "dick",
+  "pussy", "cunt", "jerk", "slut", "whore", "nigga", "niga", "niggas", "bish", "fucker",
+
+  // Bahasa daerah (Jawa, Sunda) yang digunakan menghina
+  "asu", "kamu asu", "kontolmu", "goblokmu", "bangsatmu", "jancok", "jancuk", "cok",
+  "ndasmu", "matamu", "siah", "tai", "taik", "ewean", "ewek", "koplok", "siah", "bejad",
+  "cupu", "idiot teh", "sasat", "kabehan", "gaje", "gajelas", "jebluk", "silit", "jancokmu",
+
+  // Penghinaan sosial
+  "yatim", "piatu", "banci", "bencong", "waria", "homo", "gay", "lesbi", "sakit jiwa",
+  "cacat", "tolol", "idiot", "otak udang", "otak kecebong", "otak sungsang", "pikun",
+  "anak haram", "anak setan", "anak iblis", "pengemis", "kere", "miskin", "dekil", "jelek",
+
+  // Variasi dan singkatan
+  "4nj1ng", "k0nt0l", "m3m3k", "g0bl0k", "b4ngs4t", "k0ntol", "j4nc0k", "s3x", "f*ck", "d!ck", "b!tch"
 ];
 
 // Event Ready
@@ -77,33 +85,39 @@ client.on('messageCreate', async (message) => {
     // 💥 Filter kata toxic
     if (!message.guild || !message.member) return;
 
-    if (toxicPatterns.some(pattern => pattern.test(normalizeMessage(message.content)))) {
-        await message.delete().catch(() => {});
+    // Cek apakah pesan mengandung kata-kata toxic dari array toxicWords
+    const containsToxicWord = toxicWords.some(word => {
+    // Cari kata kasar (case-insensitive dan whole-word match)
+    return message.content.toLowerCase().includes(word.toLowerCase());
+    });
 
-        // Cegah spam saat masih dalam timeout
-        if (message.member.isCommunicationDisabled()) {
-            return message.channel.send(`${message.author}, Anda sedang dalam masa timeout.`)
-                .then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000));
+    if (containsToxicWord) {
+    await message.delete().catch(() => {});
+
+    // Cegah spam jika member sedang timeout
+    if (message.member.isCommunicationDisabled()) {
+        return message.channel.send(`${message.author}, Anda sedang dalam masa timeout.`)
+        .then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000));
+    }
+
+    // Timeout 2 menit jika bot punya izin
+    if (
+        message.guild.members.me.permissions.has('ModerateMembers') &&
+        message.member.moderatable
+    ) {
+        try {
+        await message.member.timeout(120 * 1000, 'Menggunakan kata-kata toxic');
+        console.log(`⏳ ${message.author.tag} dikenai timeout sampai: ${message.member.communicationDisabledUntil}`);
+        } catch (error) {
+        console.warn(`⚠️ Gagal timeout ${message.author.tag}: ${error.message}`);
         }
+    } else {
+        console.warn(`❌ Bot tidak bisa memoderasi ${message.author.tag} (izin ModerateMembers kurang).`);
+    }
 
-        // Lakukan timeout selama 2 menit jika bot punya izin dan member bisa dimoderasi
-        if (
-            message.guild.members.me.permissions.has('ModerateMembers') &&
-            message.member.moderatable
-        ) {
-            try {
-                await message.member.timeout(60 * 1000, 'Mengirim pesan toxic');
-                console.log(`✅ ${message.author.tag} dikenai timeout sampai: ${message.member.communicationDisabledUntil}`);
-            } catch (error) {
-                console.warn(`Gagal timeout ${message.author.tag} karena: ${error.code} - ${error.message}`);
-            }
-        } else {
-            console.warn(`❌ Bot tidak dapat memoderasi ${message.author.tag} atau tidak memiliki izin ModerateMembers.`);
-        }
-
-        return message.channel.send(`${message.author}, pesan Anda mengandung kata yang tidak diperbolehkan dan Anda telah dikenai timeout selama 2 menit.`)
-            .then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000));
-    } 
+    return message.channel.send(`${message.author}, penggunaan kata-kata toxic tidak diizinkan di sini. Anda dikenai timeout selama 2 menit.`)
+        .then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000));
+    }
 
     // 🔗 Anti link (user non-admin)
     if (

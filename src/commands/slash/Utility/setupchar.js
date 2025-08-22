@@ -19,11 +19,11 @@ module.exports = {
         const msgEmbed = new EmbedBuilder()
             .setTitle("Nosterna Account Support")
             .setDescription('We have provided an option below to help you:')
-            .setImage('https://media.discordapp.net/attachments/1373178932903542894/1373498325403304016/standard_4.gif?ex=682aa17f&is=68294fff&hm=99dbfeb4688661c1b702f7c4543bb55f98763e6db910cd7e113a0333ccfc53d4&=')
+            .setImage('https://media.discordapp.net/attachments/1390919203434921995/1390926324834631721/file_00000000461861f79a1905373381522f.png?ex=686a0896&is=6868b716&hm=3854770704138337a52f1e4abe2ca772ffcd65541119f44acafbebfcb9db487f&=&format=webp&quality=lossless&width=981&height=552')
             .addFields(
-                // { name: '__Stremaer Settings__', value: `> to be used if the player experiences fore close/fc, this can help you and make object rendering easier on a step by step basis` },
+                { name: '__Stremaer Settings__', value: `> To be used if the player experiences fore close/fc, this can help you and make object rendering easier on a step by step basis` },
                 { name: '__Delete Character__', value: `> To be used to delete a character, use it if the character has an error or has a non-rp name. You can delete the character by pressing the button below` },
-                { name: '__Display Character__', value: `> to be used to display your character, if you want to take a screenshot but are too lazy to enter the game, you can take a screen shot using this feature` }
+                { name: '__Configuration Location__', value: `> To be used to change your character's Interior ID and Virtual World ID, allowing flexible environment customization without needing to enter the game` }
             )
             .setColor("FFFF00")
             .setFooter({ text: "Copyright (c) 2024 Nosterna Roleplay (All rights reversed)" })
@@ -31,10 +31,10 @@ module.exports = {
 
         const buttons = new ActionRowBuilder()
             .addComponents(
-                // new ButtonBuilder()
-                //     .setLabel('Streamer settings!')
-                //     .setStyle('Secondary')
-                //     .setCustomId('button-streamer'),
+                 new ButtonBuilder()
+                     .setLabel('Streamer settings!')
+                     .setStyle('Secondary')
+                     .setCustomId('button-streamer'),
 
                 new ButtonBuilder()
                     .setLabel('Delete character!')
@@ -42,9 +42,9 @@ module.exports = {
                     .setCustomId('button-deletechar'),
 
                 new ButtonBuilder()
-                    .setLabel('Display character!')
+                    .setLabel('Configuration Location!')
                     .setStyle('Success')
-                    .setCustomId('button-stats')
+                    .setCustomId('button-virtualworld')
             );
 
         await interaction.channel.send({ embeds: [msgEmbed], components: [buttons] });

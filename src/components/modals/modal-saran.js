@@ -12,7 +12,7 @@ module.exports = {
      */
     run: async (client, interaction) => {
 
-        const chennel = interaction.guild.channels.cache.get('1323918962572001382');
+        const chennel = interaction.guild.channels.cache.get('1384945011103371304');
         const saraninput = interaction.fields.getTextInputValue('saran_input');
 
         const embed = new EmbedBuilder()

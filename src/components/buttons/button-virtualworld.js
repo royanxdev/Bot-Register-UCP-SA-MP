@@ -3,7 +3,7 @@ const ExtendedClient = require('../../class/ExtendedClient');
 const MysqlGrand = require('../../../Mysql');
 
 module.exports = {
-    customId: 'button-stats',
+    customId: 'button-virtualworld',
     /**
      * 
      * @param {ExtendedClient} client 
@@ -19,7 +19,7 @@ module.exports = {
 
     if (res.length > 0) {
         const select = new StringSelectMenuBuilder()
-            .setCustomId('select-stats')
+            .setCustomId('select-virtualworld')
             .setPlaceholder('Select Your Character!');
 
         for (let i = 0; i < res.length; i++) {

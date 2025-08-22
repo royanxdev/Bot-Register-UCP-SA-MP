@@ -19,7 +19,7 @@ module.exports = {
         const msgEmbed = new EmbedBuilder()
             .setTitle("Nosterna User Panel Control")
             .setDescription('We have provided an option below to help you:')
-            .setImage('https://media.discordapp.net/attachments/1373178932903542894/1373498325403304016/standard_4.gif?ex=682aa17f&is=68294fff&hm=99dbfeb4688661c1b702f7c4543bb55f98763e6db910cd7e113a0333ccfc53d4&=')
+            .setImage('https://media.discordapp.net/attachments/1390919203434921995/1390926324834631721/file_00000000461861f79a1905373381522f.png?ex=686a0896&is=6868b716&hm=3854770704138337a52f1e4abe2ca772ffcd65541119f44acafbebfcb9db487f&=&format=webp&quality=lossless&width=981&height=552')
             .addFields(
                 { name: '__Register Account Button__', value: `> To create your UCP account, make sure you must have a verified member role to create an account.` },
                 { name: '__Change Password Account Button__', value: `> To change your UCP account password if you forget your UCP password/account, use someone/two UCP ` },
